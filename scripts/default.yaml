@@ -1,3 +1,4 @@
-dataset_dir: "../datasets/ours_default_data" # path to the dataset directory with 'train' and 'valid' subdirs.
+dataset_dir: "/workdir/datasets/Liquid3d" # path to the dataset directory with 'train' and 'valid' subdirs.
 train_data:
   random_rotation: true # randomly rotate training data about the gravity axis.
+data_dir: "/workdir/cconv/data/fluidmlp"

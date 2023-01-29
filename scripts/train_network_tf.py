@@ -43,6 +43,7 @@ def main():
     train_dir = os.path.splitext(
         os.path.basename(__file__))[0] + '_' + os.path.splitext(
             os.path.basename(args.cfg))[0]
+    train_dir = os.path.join(cfg['data_dir'], train_dir)
 
     val_files = sorted(glob(os.path.join(cfg['dataset_dir'], 'valid', '*.zst')))
     train_files = sorted(
@@ -168,7 +169,7 @@ def main():
                 with trainer.summary_writer.as_default():
                     tf.summary.scalar('eval/' + k, v)
 
-    model.save_weights('model_weights.h5')
+    model.save_weights(os.path.join(train_dir, 'model_weights.h5'))
     if trainer.current_step == train_params.max_iter:
         return trainer.STATUS_TRAINING_FINISHED
     else:

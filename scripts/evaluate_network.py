@@ -352,6 +352,7 @@ def main():
 
     train_dir = module_name + '_' + os.path.splitext(os.path.basename(
         args.cfg))[0]
+    train_dir = os.path.join(cfg['data_dir'], train_dir)
     val_files = sorted(glob(os.path.join(cfg['dataset_dir'], 'valid', '*.zst')))
 
     if args.weights is not None:
