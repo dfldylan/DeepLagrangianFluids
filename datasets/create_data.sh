@@ -15,7 +15,8 @@ for seed in `seq 1 220`; do
         python create_physics_scenes.py --output $OUTPUT_SCENES_DIR \
                                         --seed $seed \
                                         --default-viscosity \
-                                        --default-density
+                                        --default-density \
+                                        --default-box
 done
 
 
@@ -25,14 +26,14 @@ python create_physics_records.py --input $OUTPUT_SCENES_DIR \
                                  --output $OUTPUT_DATA_DIR 
 
 
-# Split data in train and validation set
-mkdir $OUTPUT_DATA_DIR/train
-mkdir $OUTPUT_DATA_DIR/valid
-
-for seed in `seq -f "%04g" 1 200`; do
-        mv $OUTPUT_DATA_DIR/sim_${seed}_*.msgpack.zst $OUTPUT_DATA_DIR/train
-done
-
-for seed in `seq -f "%04g" 201 220`; do
-        mv $OUTPUT_DATA_DIR/sim_${seed}_*.msgpack.zst $OUTPUT_DATA_DIR/valid
-done
+## Split data in train and validation set
+#mkdir $OUTPUT_DATA_DIR/train
+#mkdir $OUTPUT_DATA_DIR/valid
+#
+#for seed in `seq -f "%04g" 1 200`; do
+#        mv $OUTPUT_DATA_DIR/sim_${seed}_*.msgpack.zst $OUTPUT_DATA_DIR/train
+#done
+#
+#for seed in `seq -f "%04g" 201 220`; do
+#        mv $OUTPUT_DATA_DIR/sim_${seed}_*.msgpack.zst $OUTPUT_DATA_DIR/valid
+#done
