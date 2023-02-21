@@ -9,6 +9,7 @@ import zstandard as zstd
 import msgpack
 import msgpack_numpy
 msgpack_numpy.patch()
+from datasets.fluidsnet_dataloader import Dataset
 
 
 class PhysicsSimDataFlow(dataflow.RNGDataFlow):
@@ -92,7 +93,7 @@ def read_data_train(files, batch_size, random_rotation=True, **kwargs):
                      batch_size=batch_size,
                      random_rotation=random_rotation,
                      repeat=True,
-                     shuffle_buffer=512,
+                     shuffle_buffer=16,
                      **kwargs)
 
 
@@ -104,7 +105,7 @@ def read_data(files=None,
               shuffle_buffer=None,
               num_workers=1,
               cache_data=False):
-    print(files[0:20], '...' if len(files) > 20 else '')
+    # print(files[0:20], '...' if len(files) > 20 else '')
 
     # caching makes only sense if the data is finite
     if cache_data:
@@ -115,12 +116,7 @@ def read_data(files=None,
         if num_workers != 1:
             raise Exception("num_workers must be 1 if cache_data==True")
 
-    df = PhysicsSimDataFlow(
-        files=files,
-        random_rotation=random_rotation,
-        shuffle=True if shuffle_buffer else False,
-        window=window,
-    )
+    df = Dataset(random_rotation=random_rotation, seq_length=window)
 
     if repeat:
         df = dataflow.RepeatedData(df, -1)

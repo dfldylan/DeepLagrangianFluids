@@ -12,7 +12,7 @@ class MyParticleNetwork(tf.keras.Model):
                  interpolation='linear',
                  use_window=True,
                  particle_radius=0.025,
-                 timestep=1 / 50,
+                 timestep=0.004,
                  gravity=(0, -9.81, 0)):
         super().__init__(name=type(self).__name__)
         self.layer_channels = [32, 64, 64, 3]

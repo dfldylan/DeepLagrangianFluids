@@ -16,7 +16,7 @@ from evaluate_network import evaluate_tf as evaluate
 _k = 1000
 
 TrainParams = namedtuple('TrainParams', ['max_iter', 'base_lr', 'batch_size'])
-train_params = TrainParams(50 * _k, 0.001, 16)
+train_params = TrainParams(50 * _k, 0.001, 4)
 
 
 def create_model(**kwargs):
@@ -49,7 +49,7 @@ def main():
     train_files = sorted(
         glob(os.path.join(cfg['dataset_dir'], 'train', '*.zst')))
 
-    val_dataset = read_data_val(files=val_files, window=1, cache_data=True)
+    # val_dataset = read_data_val(files=val_files, window=1, cache_data=True)
 
     dataset = read_data_train(files=train_files,
                               batch_size=train_params.batch_size,
@@ -154,20 +154,23 @@ def main():
 
         current_loss = train(model, batch_tf)
         display_str_list = ['loss', float(current_loss)]
+        print(*display_str_list, flush=True)
 
         if trainer.current_step % 10 == 0:
+            print('save', end='...')
+            checkpoint.save(os.path.join(trainer.checkpoint_dir, str(trainer.current_step) + r'-model.ckpt'))
             with trainer.summary_writer.as_default():
                 tf.summary.scalar('TotalLoss', current_loss)
                 tf.summary.scalar('LearningRate',
                                   optimizer.lr(trainer.current_step))
 
-        if trainer.current_step % (1 * _k) == 0:
-            for k, v in evaluate(model,
-                                 val_dataset,
-                                 frame_skip=20,
-                                 **cfg.get('evaluation', {})).items():
-                with trainer.summary_writer.as_default():
-                    tf.summary.scalar('eval/' + k, v)
+        # if trainer.current_step % (1 * _k) == 0:
+        #     for k, v in evaluate(model,
+        #                          val_dataset,
+        #                          frame_skip=20,
+        #                          **cfg.get('evaluation', {})).items():
+        #         with trainer.summary_writer.as_default():
+        #             tf.summary.scalar('eval/' + k, v)
 
     model.save_weights(os.path.join(train_dir, 'model_weights.h5'))
     if trainer.current_step == train_params.max_iter:
