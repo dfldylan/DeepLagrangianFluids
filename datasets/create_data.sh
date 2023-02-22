@@ -4,14 +4,14 @@
 # before running this script
 
 # output directories
-OUTPUT_SCENES_DIR=ours_default_scenes
-OUTPUT_DATA_DIR=ours_default_data
+OUTPUT_SCENES_DIR=../../data/temp/20230131
+OUTPUT_DATA_DIR=../../data/temp/test_dataset
 
 mkdir $OUTPUT_SCENES_DIR
 
 # This script is purely sequential but it is recommended to parallelize the
 # following loop, which generates the simulation data.
-for seed in `seq 1 220`; do
+for seed in `seq 1 10`; do
         python create_physics_scenes.py --output $OUTPUT_SCENES_DIR \
                                         --seed $seed \
                                         --default-viscosity \
@@ -23,7 +23,7 @@ done
 # Transforms and compresses the data such that it can be used for training.
 # This will also create the OUTPUT_DATA_DIR.
 python create_physics_records.py --input $OUTPUT_SCENES_DIR \
-                                 --output $OUTPUT_DATA_DIR 
+                                 --output $OUTPUT_DATA_DIR
 
 
 ## Split data in train and validation set
